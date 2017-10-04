@@ -20,6 +20,9 @@ or for Swift 4
 import Titan
 import TitanKituraAdapter
 import TitanMetric
+import RedShot
+
+let redis = try Redis(hostname:"redis",port:6379) 
 
 let titanApp = Titan()
 
