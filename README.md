@@ -1,17 +1,14 @@
 # TitanMetric
 
-Log HTTP request metric into a Redis Channel.
+Log HTTP request metric into a ElasticSearch.
 
 ## Getting started
 
-TitanMetric depends on [Redshot](https://github.com/bermudadigitalstudio/Redshot) and [TitanKituraAdapter](https://github.com/bermudadigitalstudio/TitanKituraAdapter).
+TitanMetric depends on [TitanKituraAdapter](https://github.com/bermudadigitalstudio/TitanKituraAdapter).
 
 
 Add this in your Package.swift :
 
-`.Package(url: "https://github.com/bermudadigitalstudio/TitanMetric.git", majorVersion: 0)`
-
-or for Swift 4
 
 `.package(url: "https://github.com/bermudadigitalstudio/TitanMetric.git", .upToNextMajor(from:"0.0.0"))`
 
@@ -20,7 +17,7 @@ or for Swift 4
 import Titan
 import TitanKituraAdapter
 import TitanMetric
-import RedShot
+
 
 let redis = try Redis(hostname:"redis",port:6379) 
 
@@ -30,10 +27,13 @@ titanApp.get("/") {
   return "Hello world"
 }
 
+do {
 
-TitanKituraAdapter.serve(titanApp.app, on: 8000, metrics: metricLogger(redis: redis, service: "myservicename",channel:"mychannel.tolog"))
+    let metricLogger = try MetricLogger(elasticHosts: [url], username: "", password: "")
+     TitanKituraAdapter.serve(titan.app, on: 1234,  defaultResponse: Response(code: 404, body: nil), metrics: metricLogger.logger())
+
+} catch {
+
+}
+
 ```
-
-## Get the metrics
-
-`redis-cli SUBSCRIBE mychannel.tolog`
