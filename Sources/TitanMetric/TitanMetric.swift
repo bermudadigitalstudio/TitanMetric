@@ -22,7 +22,7 @@ public class MetricLogger {
     ///   - log: A SwiftyBeaver instance to get some cool logs ;-).
     public init(elasticHosts: [URL], username: String, password: String, log: SwiftyBeaver.Type? = nil) throws {
         self.hosts = elasticHosts
-        let login = String(format: "%@:%@", username, password)
+        let login = "\(username):\(password)"
         guard let credentials = login.data(using: .utf8)?.base64EncodedString() else {
             throw MetricError.credentialSerialization
         }
@@ -51,12 +51,6 @@ public class MetricLogger {
                 request.httpBody = try JSONEncoder().encode(metric)
 
                 self.session.dataTask(with: request, completionHandler: { (data, response, error) in
-                    print("ELASTIC RESPONSE")
-                    print(response)
-                    if let data = data {
-                        print(String(data: data, encoding: .utf8))
-                    }
-                    print(error)
                     if let error = error {
                         self.log?.error(error)
                     }
