@@ -50,7 +50,13 @@ public class MetricLogger {
             do {
                 request.httpBody = try JSONEncoder().encode(metric)
 
-                self.session.dataTask(with: request, completionHandler: { (_, _, error) in
+                self.session.dataTask(with: request, completionHandler: { (data, response, error) in
+                    print("ELASTIC RESPONSE")
+                    print(response)
+                    if let data = data {
+                        print(String(data: data, encoding: .utf8))
+                    }
+                    print(error)
                     if let error = error {
                         self.log?.error(error)
                     }
