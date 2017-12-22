@@ -40,8 +40,6 @@ public class MetricLogger {
 
         let fn = { (metric: HTTPMetric) -> Void in
 
-            self.log?.debug(metric.requestHeader)
-
             guard let url = self.hosts.first else { return }
 
             var request = URLRequest(url: url.appendingPathComponent("/titantrace/trace"))
@@ -66,12 +64,12 @@ public class MetricLogger {
     }
 }
 
-public func metricHeader(req: RequestType, res: ResponseType) -> (RequestType, ResponseType) {
+public func metricHeader(req: RequestType, res: ResponseType, headerName: String = "X-B3-TraceId") -> (RequestType, ResponseType) {
     var res = res.copy()
-    if let traceId = req.headers["X-B3-TraceId"] {
-        res.headers["X-B3-TraceId"] = traceId
+    if let traceId = req.headers[headerName] {
+        res.headers[headerName] = traceId
     } else {
-        res.headers["X-B3-TraceId"] = UUID().uuidString
+        res.headers[headerName] = UUID().uuidString
     }
 
     return (req, res)
