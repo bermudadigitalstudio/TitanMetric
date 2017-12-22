@@ -40,6 +40,8 @@ public class MetricLogger {
 
         let fn = { (metric: HTTPMetric) -> Void in
 
+            self.log?.debug(metric.requestHeader)
+
             guard let url = self.hosts.first else { return }
 
             var request = URLRequest(url: url.appendingPathComponent("/titantrace/trace"))
