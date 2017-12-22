@@ -64,12 +64,12 @@ public class MetricLogger {
     }
 }
 
-public func metricHeader(req: RequestType, res: ResponseType, headerName: String = "X-B3-TraceId") -> (RequestType, ResponseType) {
+public func metricHeader(req: RequestType, res: ResponseType) -> (RequestType, ResponseType) {
     var res = res.copy()
-    if let traceId = req.headers[headerName] {
-        res.headers[headerName] = traceId
+    if let traceId = req.headers["X-B3-TraceId"] {
+        res.headers["X-B3-TraceId"] = traceId
     } else {
-        res.headers[headerName] = UUID().uuidString
+        res.headers["X-B3-TraceId"] = UUID().uuidString
     }
 
     return (req, res)
