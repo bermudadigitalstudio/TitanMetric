@@ -11,7 +11,7 @@ public class MetricLogger {
 
     private let session = URLSession(configuration: .default)
     private let hosts: [URL]
-    private let credentials: String
+    private let credentials: String?
     private let log: SwiftyBeaver.Type?
 
     /// Creates a new MetricLogger, which is sending metric to an ElasticSearch host by using the Elasticsearch HTTP API.
@@ -20,13 +20,17 @@ public class MetricLogger {
     ///   - username: The basic authentication username for connecting to Elasticsearch.
     ///   - password: The basic authentication password for connecting to Elasticsearch.
     ///   - log: A SwiftyBeaver instance to get some cool logs ;-).
-    public init(elasticHosts: [URL], username: String, password: String, log: SwiftyBeaver.Type? = nil) throws {
+    public init(elasticHosts: [URL], username: String? = nil, password: String? = nil , log: SwiftyBeaver.Type? = nil) throws {
         self.hosts = elasticHosts
-        let login = "\(username):\(password)"
-        guard let credentials = login.data(using: .utf8)?.base64EncodedString() else {
-            throw MetricError.credentialSerialization
+        if let username = username, let password = password {
+            let login = "\(username):\(password)"
+            guard let credentials = login.data(using: .utf8)?.base64EncodedString() else {
+                throw MetricError.credentialSerialization
+            }
+            self.credentials = credentials
+        } else {
+            self.credentials = nil
         }
-        self.credentials = credentials
         self.log = log
     }
 
@@ -44,7 +48,9 @@ public class MetricLogger {
 
             var request = URLRequest(url: url.appendingPathComponent("/titantrace/trace"))
             request.httpMethod = "POST"
-            request.addValue("Basic \(self.credentials)", forHTTPHeaderField: "Authorization")
+            if let credentials = self.credentials {
+                request.addValue("Basic \(credentials)", forHTTPHeaderField: "Authorization")
+            }
             request.addValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
 
             do {

@@ -8,9 +8,9 @@ let package = Package(
         .library(name: "TitanMetric", targets: ["TitanMetric"]),
         ],
     dependencies: [
-        .package(url: "https://github.com/bermudadigitalstudio/Titan.git", .exact( "0.9.0-beta.3")),
-        .package(url: "https://github.com/bermudadigitalstudio/TitanKituraAdapter.git", .exact( "0.9.0-beta.5")),
-        .package(url: "https://github.com/SwiftyBeaver/SwiftyBeaver.git",.upToNextMinor(from: "1.5.0")),
+        .package(url: "https://github.com/bermudadigitalstudio/Titan.git", .upToNextMinor(from: "0.9.0")),
+        .package(url: "https://github.com/bermudadigitalstudio/TitanKituraAdapter.git", .upToNextMinor(from: "0.9.0")),
+        .package(url: "https://github.com/SwiftyBeaver/SwiftyBeaver.git", .upToNextMinor(from: "1.5.0")),
     ],
     targets: [
         .target(name: "TitanMetric", dependencies:["Titan","TitanKituraAdapter","SwiftyBeaver"]),
